@@ -29,4 +29,18 @@ class ClientService {
 
     }
 
+    fun updateName(client:Client): Client {
+        try{
+            val response = clientRepository.findById(client.id)
+                ?: throw Exception("ID no existe")
+            response.apply {
+                fullname=client.fullname
+            }
+            return clientRepository.save(response)
+        }
+        catch (ex:Exception){
+            throw ResponseStatusException(HttpStatus.NOT_FOUND,ex.message)
+        }
+    }
+
 }
