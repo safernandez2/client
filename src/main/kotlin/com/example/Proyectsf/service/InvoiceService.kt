@@ -30,6 +30,9 @@ class InvoiceService {
     fun list ():List<Invoice>{
         return invoiceRepository.findAll()
     }
+    fun listTotalMoreThat(total:Double?): List<Invoice>?{
+        return invoiceRepository.findTotalMoreThat(total)
+    }
     fun update(invoice:Invoice):Invoice{
         try {
         invoiceRepository.findById(invoice.id)

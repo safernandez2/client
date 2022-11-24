@@ -1,7 +1,8 @@
 package com.example.Proyectsf.controller
 
-import com.example.Proyectsf.model.Client
-import com.example.Proyectsf.service.ClientService
+
+import com.example.Proyectsf.model.Product
+import com.example.Proyectsf.service.ProductService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -15,25 +16,25 @@ import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/client")
-class ClientController {
+@RequestMapping("/product")
+class ProductController {
     @Autowired
-    lateinit var clientService: ClientService
+    lateinit var productService: ProductService
     @PostMapping
-    fun save (@RequestBody @Valid client:Client):Client{
-        return clientService.save(client)
+    fun save (@RequestBody @Valid product:Product):Product{
+        return productService.save(product)
     }
     @GetMapping
-    fun list ():List<Client>{
-        return clientService.list()
+    fun list ():List<Product>{
+        return productService.list()
     }
     @PutMapping
-    fun update (@RequestBody client: Client):ResponseEntity<Client>{
-        return ResponseEntity(clientService.update(client), HttpStatus.OK)
+    fun update (@RequestBody product: Product):ResponseEntity<Product>{
+        return ResponseEntity(productService.update(product), HttpStatus.OK)
     }
 
     @PatchMapping
-    fun updateName (@RequestBody client:Client):ResponseEntity<Client>{
-        return ResponseEntity(clientService.updateName(client), HttpStatus.OK)
+    fun updateBrand (@RequestBody product: Product):ResponseEntity<Product>{
+        return ResponseEntity(productService.updateBrand(product), HttpStatus.OK)
     }
 }
