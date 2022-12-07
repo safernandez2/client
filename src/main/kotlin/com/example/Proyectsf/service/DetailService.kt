@@ -3,6 +3,7 @@ package com.example.Proyectsf.service
 
 import com.example.Proyectsf.model.Detail
 import com.example.Proyectsf.model.Invoice
+import com.example.Proyectsf.model.Product
 import com.example.Proyectsf.repository.ClientRepository
 import com.example.Proyectsf.repository.DetailRepository
 import com.example.Proyectsf.repository.InvoiceRepository
@@ -24,14 +25,20 @@ class DetailService {
     lateinit var productRepository: ProductRepository
 
     fun save(detail: Detail): Detail {
-        try {
-            invoiceRepository.findById(detail.invoiceId)
-            productRepository.findById(detail.productId)
-                ?: throw Exception("Invoice y product no existe")
-            return detailRepository.save(detail)
+        try{
+            val response=detailRepository.save(detail)
+            val responseProduct:Product = productRepository.findById(response.productId)
+            responseProduct.apply {
+                stock = stock?.minus(detail.quantity!!)
+            }
+            productRepository.save(responseProduct)
 
-        } catch (ex: Exception) {
-            throw ResponseStatusException(HttpStatus.NOT_FOUND, ex.message)
+            calculateAndUpdateTotal(response)
+
+            return response
+        }
+        catch (ex:Exception){
+            throw ResponseStatusException(HttpStatus.NOT_FOUND,ex.message)
         }
     }
 
@@ -61,5 +68,13 @@ class DetailService {
         } catch (ex: Exception) {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, ex.message)
         }
+    }
+    fun calculateAndUpdateTotal (detail : Detail){
+        val totalCalculated = detailRepository.sumTotal(detail.invoiceId)
+        val invoiceResponse = invoiceRepository.findById(detail.invoiceId)
+        invoiceResponse.apply {
+            total=totalCalculated
+        }
+        invoiceRepository.save(invoiceResponse)
     }
 }
