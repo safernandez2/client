@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 
 @Repository
-interface DetailRepository : JpaRepository<Detail, Long?> {
+interface  DetailRepository : JpaRepository<Detail, Long?> {
     fun findById(id: Long?): Detail?
 
 
