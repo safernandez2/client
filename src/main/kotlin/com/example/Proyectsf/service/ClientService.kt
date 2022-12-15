@@ -3,9 +3,14 @@ package com.example.Proyectsf.service
 import com.example.Proyectsf.model.Client
 import com.example.Proyectsf.repository.ClientRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Example
+import org.springframework.data.domain.ExampleMatcher
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+
 
 @Service
 class ClientService {
@@ -14,8 +19,11 @@ class ClientService {
     fun save (client:Client):Client{
         return clientRepository.save(client)
     }
-    fun list ():List<Client>{
-        return clientRepository.findAll()
+    fun list (pageable: Pageable, client: Client):Page<Client>{
+        val matcher = ExampleMatcher.matching()
+            .withIgnoreNullValues()
+            .withMatcher(("fullname"), ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+        return clientRepository.findAll(Example.of(client, matcher), pageable)
     }
 
     fun listById (id: Long?): Client?{

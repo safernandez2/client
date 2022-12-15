@@ -3,6 +3,7 @@ package com.example.Proyectsf.controller
 import com.example.Proyectsf.model.Client
 import com.example.Proyectsf.service.ClientService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -25,9 +26,12 @@ class ClientController {
     fun save (@RequestBody @Valid client:Client):Client{
         return clientService.save(client)
     }
+
+
     @GetMapping
-    fun list ():List<Client>{
-        return clientService.list()
+    fun list (client: Client, pageable: Pageable):ResponseEntity<*>{
+        val response = clientService.list(pageable, client)
+        return ResponseEntity(response, HttpStatus.OK)
     }
 
     @GetMapping("/{id}")
